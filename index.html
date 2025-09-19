@@ -166,15 +166,23 @@
                 card.dataset.matchId = match.id;
                 const selectedCount = (match.composition?.selected || []).length;
                 const teamStatusHTML = selectedCount > 0 ? `<div class="team-status">👥 ${selectedCount}/${TEAM_SIZE}</div>` : '';
+                
                 let scoreHTML = '';
                 if (match.score && (match.score.alsatia > 0 || match.score.opponent > 0)) {
                     let scoreClass = 'draw';
                     if (match.score.alsatia > match.score.opponent) scoreClass = 'win';
                     else if (match.score.alsatia < match.score.opponent) scoreClass = 'loss';
+                    
                     const alsatiaScore = match.score.alsatia;
                     const opponentScore = match.score.opponent;
-                    scoreHTML = `<div class="score-display ${scoreClass}">${alsatiaScore} - ${opponentScore}</div>`;
+                    
+                    const scoreText = match.venue === 'home' 
+                        ? `${alsatiaScore} - ${opponentScore}` 
+                        : `${opponentScore} - ${alsatiaScore}`;
+                    
+                    scoreHTML = `<div class="score-display ${scoreClass}">${scoreText}</div>`;
                 }
+
                 let selectedPlayersHTML = '';
                 if (selectedCount > 0) { const playerNames = match.composition.selected.map(id => { const p = playersData.find(pl => pl.id === id); return p ? `<li>${p.name}</li>` : ''; }).join(''); selectedPlayersHTML = `<div class="selected-players-section"><h4>Équipe sélectionnée</h4><ul class="selected-players-list">${playerNames}</ul></div>`; }
                 const formattedDate = new Date(match.date).toLocaleDateString('fr-FR', { weekday: 'long', day: '2-digit', month: '2-digit', year: 'numeric' });
