@@ -35,6 +35,12 @@
         .player-delete-btn:hover { opacity: 1; }
         .add-player-btn { background-color: transparent; border: 2px dashed var(--text-primary); color: var(--text-primary); padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; font-weight: 600; margin-top: 1rem; width: 100%; transition: all 0.2s; }
         .add-player-btn:hover { background-color: var(--text-primary); color: var(--card-bg); }
+        .ranking-table { width: 100%; border-collapse: collapse; margin-top: 1rem; font-size: 0.85rem; }
+        .ranking-table th, .ranking-table td { padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--border-color); }
+        .ranking-table th { font-weight: 600; color: var(--text-primary); }
+        .ranking-table .our-team { background-color: var(--info-bg); font-weight: bold; }
+        .ranking-table td:first-child, .ranking-table th:first-child { text-align: center; }
+        .ranking-table th:not(:nth-child(2)), .ranking-table td:not(:nth-child(2)) { text-align: center; }
     </style>
 </head>
 <body data-theme="light">
@@ -45,6 +51,7 @@
             <div class="header-top">
                 <div></div>
                 <div class="header-controls">
+                    <button type="button" class="help-btn" id="rankingBtn">🏆 <span>Classement</span></button>
                     <button type="button" class="help-btn" id="editPlayersBtn">✏️ <span>Effectif</span></button>
                     <button type="button" class="help-btn" id="helpBtn" aria-label="Aide et guide d'utilisation">💡<span>Aide</span></button>
                     <button type="button" class="install-btn hidden" id="installBtn" aria-label="Installer l'application"><span>📱</span> <span>Installer</span></button>
@@ -90,11 +97,11 @@
     <div class="modal" id="helpModal" role="dialog" aria-modal="true" aria-labelledby="helpModalTitle">
         <div class="modal-header"><h3 id="helpModalTitle">💡 Guide d'utilisation</h3></div>
         <div class="modal-body help-modal-body">
-            <div class="help-section"><h4>📅 Consulter les matchs</h4><p>Utilisez la barre de recherche et les filtres pour trouver rapidement un match.</p></div>
+            <div class="help-section"><h4>🏆 Consulter le classement</h4><p>Cliquez sur le bouton <code>🏆 Classement</code> en haut de la page pour voir le classement actuel de la poule.</p></div>
             <div class="help-section"><h4>👥 Composer votre équipe</h4><p>Cliquez sur <code>👥 Gérer l'équipe</code> pour définir les disponibilités (✔️ / ❌ / ❔) et sélectionner les 3 joueurs de la rencontre.</p></div>
             <div class="help-section"><h4>📊 Saisir les scores</h4><p>Après un match, cliquez sur <code>📊 Saisir score</code> pour enregistrer le résultat final.</p></div>
             <div class="help-section"><h4>✏️ Modifier l'effectif</h4><p>Cliquez sur le bouton <code>✏️ Effectif</code> pour ajouter, modifier ou supprimer des joueurs de la liste de l'équipe.</p></div>
-            <div class="help-section"><h4>🌐 Données Partagées</h4><p>Toutes les données (effectif, compositions, scores) sont sauvegardées en ligne et visibles par tous.</p></div>
+            <div class="help-section"><h4>🌐 Données Partagées</h4><p>Toutes les données sont sauvegardées en ligne et visibles par tous.</p></div>
             <div class="help-section"><h4>📱 Application Mobile</h4><p>Installez l'application sur votre téléphone via le bouton <code>📱 Installer</code> pour un accès rapide !</p></div>
         </div>
         <div class="modal-footer"><button type="button" class="action-btn" id="closeHelpBtn">Compris !</button></div>
@@ -129,12 +136,24 @@
         <div class="modal-footer"><button type="button" class="action-btn" id="cancelPlayersBtn" style="background: var(--text-secondary);">Annuler</button><button type="button" class="action-btn" id="savePlayersBtn">Sauvegarder</button></div>
     </div>
 
+    <div class="modal-backdrop" id="rankingModalBackdrop"></div>
+    <div class="modal" id="rankingModal" role="dialog" aria-modal="true" aria-labelledby="rankingModalTitle">
+        <div class="modal-header"><h3 id="rankingModalTitle">🏆 Classement - Division 2 Poule A</h3></div>
+        <div class="modal-body" style="padding: 0.5rem 1rem;">
+            <table class="ranking-table">
+                <thead><tr><th>R.</th><th>Équipe</th><th>Pts</th><th>J</th><th>G</th><th>N</th><th>P</th><th>Pp</th><th>Pc</th></tr></thead>
+                <tbody id="rankingTableBody"></tbody>
+            </table>
+        </div>
+        <div class="modal-footer"><button type="button" class="action-btn" id="closeRankingBtn">Fermer</button></div>
+    </div>
+
     <script>
     (function() {
         'use strict';
         
         const TEAM_SIZE = 3;
-        let playersData = [];
+        let playersData = [], matchesData = [], rankingData = [];
         
         const getDefaultComposition = () => ({ available: [], unavailable: [], noresponse: playersData.map(p => p.id), selected: [] });
         const getDefaultScore = () => ({ alsatia: 0, opponent: 0 });
@@ -146,15 +165,17 @@
         const pwaStatus = document.getElementById('pwaStatus'), installBtn = document.getElementById('installBtn');
         const scoreModal = document.getElementById('scoreModal'), scoreModalBackdrop = document.getElementById('scoreModalBackdrop'), scoreModalTitle = document.getElementById('scoreModalTitle'), scoreModalSubtitle = document.getElementById('scoreModalSubtitle'), alsatiaScoreInput = document.getElementById('alsatiaScoreInput'), opponentScoreInput = document.getElementById('opponentScoreInput'), opponentScoreLabel = document.getElementById('opponentScoreLabel'), saveScoreBtn = document.getElementById('saveScoreBtn'), cancelScoreBtn = document.getElementById('cancelScoreBtn');
         const editPlayersBtn = document.getElementById('editPlayersBtn'), playersModal = document.getElementById('playersModal'), playersModalBackdrop = document.getElementById('playersModalBackdrop'), playerEditList = document.getElementById('playerEditList'), savePlayersBtn = document.getElementById('savePlayersBtn'), cancelPlayersBtn = document.getElementById('cancelPlayersBtn'), addPlayerBtn = document.getElementById('addPlayerBtn');
+        const rankingBtn = document.getElementById('rankingBtn'), rankingModal = document.getElementById('rankingModal'), rankingModalBackdrop = document.getElementById('rankingModalBackdrop'), rankingTableBody = document.getElementById('rankingTableBody'), closeRankingBtn = document.getElementById('closeRankingBtn');
         
-        let matchesData = [], currentFilter = 'all', currentSearch = '', currentEditingMatchId = null, tempComposition = null, deferredPrompt;
+        let currentFilter = 'all', currentSearch = '', currentEditingMatchId = null, tempComposition = null, deferredPrompt;
 
         async function loadMatchesData() { try { const response = await fetch('/.netlify/functions/getMatches-equipe3'); if (!response.ok) throw new Error('API error'); const data = await response.json(); data.sort((a, b) => a.journee - b.journee); return data.map(match => ({ ...match, composition: match.composition || getDefaultComposition(), score: match.score || getDefaultScore() })); } catch (error) { console.error("Load error:", error); resultsInfo.textContent = "Erreur de chargement."; return []; } }
         async function saveComposition(matchId, composition) { try { const response = await fetch('/.netlify/functions/updateMatch-equipe3', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ matchId, composition }) }); if (!response.ok) throw new Error('API error'); } catch (error) { console.error("Save error:", error); alert("Erreur de sauvegarde."); } }
         async function saveScore(matchId, score) { try { const response = await fetch('/.netlify/functions/updateScore-equipe3', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ matchId, score }) }); if (!response.ok) throw new Error('API error'); } catch (error) { console.error("Save score error:", error); alert("Erreur de sauvegarde du score."); } }
         async function loadPlayersData() { try { const response = await fetch('/.netlify/functions/getPlayers-equipe3'); if (!response.ok) throw new Error('API error'); return await response.json(); } catch (error) { console.error("Player load error:", error); alert("Erreur: Impossible de charger la liste des joueurs."); return []; } }
         async function savePlayers(updatedPlayers) { try { const response = await fetch('/.netlify/functions/updatePlayers-equipe3', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(updatedPlayers), }); if (!response.ok) throw new Error('API error'); } catch (error) { console.error("Save players error:", error); alert("Erreur de sauvegarde des joueurs."); } }
-        
+        async function loadRankingData() { try { const response = await fetch('/.netlify/functions/getRanking-equipe3'); if (!response.ok) throw new Error('API error'); return await response.json(); } catch (error) { console.error("Ranking load error:", error); return []; } }
+
         const renderMatches = (matches) => {
             matchesGrid.innerHTML = '';
             if (matches.length === 0) { resultsInfo.style.display = 'none'; noResults.style.display = 'block'; return; }
@@ -172,14 +193,9 @@
                     let scoreClass = 'draw';
                     if (match.score.alsatia > match.score.opponent) scoreClass = 'win';
                     else if (match.score.alsatia < match.score.opponent) scoreClass = 'loss';
-                    
                     const alsatiaScore = match.score.alsatia;
                     const opponentScore = match.score.opponent;
-                    
-                    const scoreText = match.venue === 'home' 
-                        ? `${alsatiaScore} - ${opponentScore}` 
-                        : `${opponentScore} - ${alsatiaScore}`;
-                    
+                    const scoreText = match.venue === 'home' ? `${alsatiaScore} - ${opponentScore}` : `${opponentScore} - ${alsatiaScore}`;
                     scoreHTML = `<div class="score-display ${scoreClass}">${scoreText}</div>`;
                 }
 
@@ -194,6 +210,7 @@
             matchesGrid.appendChild(fragment);
             document.querySelectorAll('.match-card').forEach((card, index) => { setTimeout(() => card.classList.add('visible'), index * 80); });
         };
+        const renderRankingTable = (data) => { rankingTableBody.innerHTML = ''; if (!data || data.length === 0) { rankingTableBody.innerHTML = '<tr><td colspan="9">Classement non disponible.</td></tr>'; return; } data.forEach(team => { const row = document.createElement('tr'); if (team.isOurTeam) row.classList.add('our-team'); row.innerHTML = `<td>${team.rang}</td><td>${team.equipe}</td><td>${team.pointsResultat}</td><td>${team.joues}</td><td>${team.gagnes}</td><td>${team.nuls}</td><td>${team.perdus}</td><td>${team.pointsJeuGagnes}</td><td>${team.pointsJeuPerdus}</td>`; rankingTableBody.appendChild(row); }); };
         const applyFilters = () => { if (!playersData.length) return; const filtered = matchesData.filter(m => { const selNames = (m.composition?.selected||[]).map(id => playersData.find(p=>p.id===id)?.name||'').join(' ').toLowerCase(); const searchOk = currentSearch===''||(m.homeTeam+m.awayTeam+m.date+selNames).toLowerCase().includes(currentSearch); const filterOk = currentFilter==='all'||m.venue===currentFilter||m.month===currentFilter; return searchOk&&filterOk; }); renderMatches(filtered); };
         
         const openModal = (modal, backdrop) => { backdrop.classList.add('visible'); modal.classList.add('visible'); };
@@ -228,10 +245,14 @@
         cancelPlayersBtn.addEventListener('click', () => closeModal(playersModal, playersModalBackdrop));
         savePlayersBtn.addEventListener('click', async () => { const updatedPlayers = []; const rows = playerEditList.querySelectorAll('li'); rows.forEach(row => { const id = parseInt(row.dataset.playerId, 10); const input = row.querySelector('input'); const name = input.value.trim(); if (name) { updatedPlayers.push({ id, name }); } }); updatedPlayers.sort((a, b) => a.id - b.id); await savePlayers(updatedPlayers); playersData = updatedPlayers; applyFilters(); closeModal(playersModal, playersModalBackdrop); });
         
+        rankingBtn.addEventListener('click', () => openModal(rankingModal, rankingModalBackdrop));
+        closeRankingBtn.addEventListener('click', () => closeModal(rankingModal, rankingModalBackdrop));
+        
         modalBackdrop.addEventListener('click', () => closeModal(compositionModal, modalBackdrop));
         helpModalBackdrop.addEventListener('click', () => closeModal(helpModal, helpModalBackdrop));
         scoreModalBackdrop.addEventListener('click', () => closeModal(scoreModal, scoreModalBackdrop));
         playersModalBackdrop.addEventListener('click', () => closeModal(playersModal, playersModalBackdrop));
+        rankingModalBackdrop.addEventListener('click', () => closeModal(rankingModal, rankingModalBackdrop));
 
         searchInput.addEventListener('input', e => { currentSearch=e.target.value.toLowerCase(); applyFilters(); });
         filterButtons.forEach(b => { b.addEventListener('click', () => { filterButtons.forEach(btn=>btn.classList.remove('active')); b.classList.add('active'); currentFilter=b.dataset.filter; applyFilters(); }); });
@@ -242,7 +263,14 @@
             try { savedTheme = localStorage.getItem('theme') || 'light'; } catch(e){}
             document.body.dataset.theme = savedTheme;
             updateThemeButton(savedTheme);
-            [playersData, matchesData] = await Promise.all([ loadPlayersData(), loadMatchesData() ]);
+            
+            [playersData, matchesData, rankingData] = await Promise.all([ 
+                loadPlayersData(), 
+                loadMatchesData(),
+                loadRankingData()
+            ]);
+            
+            renderRankingTable(rankingData);
             applyFilters();
         });
     })();
