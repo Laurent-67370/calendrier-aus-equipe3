@@ -29,15 +29,12 @@ const initialMatchesData = [
         venue: 'away', 
         month: 'september',
         composition: { // Composition par défaut pour la J1
-            available: [1, 2, 3, 4],
-            unavailable: [5, 6],
-            noresponse: [],
+            available: [1, 2, 4], // Philippe, JP, Julien
+            unavailable: [],
+            noresponse: [3, 5, 6],
             selected: [4, 2, 1] // Julien, JP, Philippe comme sur l'image
         }, 
-        score: { // Score de la J1 pré-rempli
-            alsatia: 10,
-            opponent: 0
-        }
+        score: getDefaultScore() // Score initialisé à 0-0
     },
     // Les autres journées sont initialisées normalement
     { id: 'J2', journee: 2, homeTeam: 'ALSATIA UNITAS SCHILTIGHEIM 3', awayTeam: 'STBG ST JEAN 6', date: '2025-10-02', time: '20h15', venue: 'home', month: 'october', composition: getDefaultComposition(), score: getDefaultScore() },
@@ -82,7 +79,7 @@ exports.handler = async function(event, context) {
         const matchesBatch = db.batch();
         initialMatchesData.forEach(match => {
             const { id, ...matchData } = match;
-            matchesBatch.set(matchesCollection.doc(id), matchData); // Utilise les données complètes de initialMatchesData
+            matchesBatch.set(matchesCollection.doc(id), matchData);
         });
         await matchesBatch.commit();
     }
