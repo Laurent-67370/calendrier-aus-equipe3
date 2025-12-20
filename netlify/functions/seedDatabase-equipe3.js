@@ -80,15 +80,23 @@ const db = admin.firestore();
 
 exports.handler = async function(event, context) {
   try {
-    // Initialisation des matchs
+    // Initialisation des matchs - Ajoute uniquement les matchs manquants
     const matchesCollection = db.collection('matches-equipe3');
-    const matchesSnapshot = await matchesCollection.get();
-    if (matchesSnapshot.empty) {
-        const matchesBatch = db.batch();
-        initialMatchesData.forEach(match => {
-            const { id, ...matchData } = match;
-            matchesBatch.set(matchesCollection.doc(id), matchData);
-        });
+    const matchesBatch = db.batch();
+    let addedMatches = 0;
+
+    for (const match of initialMatchesData) {
+        const { id, ...matchData } = match;
+        const docRef = matchesCollection.doc(id);
+        const docSnapshot = await docRef.get();
+
+        if (!docSnapshot.exists) {
+            matchesBatch.set(docRef, matchData);
+            addedMatches++;
+        }
+    }
+
+    if (addedMatches > 0) {
         await matchesBatch.commit();
     }
 
@@ -113,10 +121,14 @@ exports.handler = async function(event, context) {
         });
         await rankingBatch.commit();
     }
-    
+
     return {
       statusCode: 200,
-      body: JSON.stringify({ message: "Base de données pour l'équipe 3 initialisée ou déjà existante." }),
+      body: JSON.stringify({
+        message: "Base de données pour l'équipe 3 initialisée avec succès.",
+        matchesAdded: addedMatches,
+        totalMatches: initialMatchesData.length
+      }),
     };
   } catch (error) {
     console.error("Erreur lors de l'initialisation de la base : ", error);
