@@ -53,16 +53,16 @@ const initialMatchesData = [
     { id: 'J14', journee: 14, homeTeam: 'VENDENHEIM ENVOLEE 6', awayTeam: 'ALSATIA UNITAS SCHILTIGHEIM 3', date: '2026-05-15', time: '20h00', venue: 'away', month: 'may', composition: getDefaultComposition(), score: getDefaultScore() }
 ];
 
-// 3. Données du classement basées sur votre image
+// 3. Données du classement actualisées après 7 journées (1ère Phase)
 const initialRankingData = [
-    { rang: 1, equipe: "ALSATIA UNITAS SCHILTIGHEIM 3", pointsResultat: 5, joues: 1, gagnes: 1, nuls: 0, perdus: 0, pointsJeuGagnes: 10, pointsJeuPerdus: 0, isOurTeam: true },
-    { rang: 2, equipe: "OSTWALD ST OSWALD 7", pointsResultat: 5, joues: 1, gagnes: 1, nuls: 0, perdus: 0, pointsJeuGagnes: 10, pointsJeuPerdus: 0, isOurTeam: false },
-    { rang: 3, equipe: "VENDENHEIM ENVOLEE 6", pointsResultat: 5, joues: 1, gagnes: 1, nuls: 0, perdus: 0, pointsJeuGagnes: 8, pointsJeuPerdus: 2, isOurTeam: false },
-    { rang: 4, equipe: "BISCHHEIM CHEMINOTS T.T. 2", pointsResultat: 4, joues: 1, gagnes: 1, nuls: 0, perdus: 0, pointsJeuGagnes: 7, pointsJeuPerdus: 3, isOurTeam: false },
-    { rang: 5, equipe: "STBG RACING CLUB 3", pointsResultat: 2, joues: 1, gagnes: 0, nuls: 0, perdus: 1, pointsJeuGagnes: 3, pointsJeuPerdus: 7, isOurTeam: false },
-    { rang: 6, equipe: "STBG ST JEAN 6", pointsResultat: 1, joues: 1, gagnes: 0, nuls: 0, perdus: 1, pointsJeuGagnes: 2, pointsJeuPerdus: 8, isOurTeam: false },
-    { rang: 7, equipe: "OSTWALD ST OSWALD 5", pointsResultat: 1, joues: 1, gagnes: 0, nuls: 0, perdus: 1, pointsJeuGagnes: 0, pointsJeuPerdus: 10, isOurTeam: false },
-    { rang: 8, equipe: "STBG CTS 4", pointsResultat: 1, joues: 1, gagnes: 0, nuls: 0, perdus: 1, pointsJeuGagnes: 0, pointsJeuPerdus: 10, isOurTeam: false }
+    { rang: 1, equipe: "VENDENHEIM ENVOLEE 6", pointsResultat: 32, joues: 7, gagnes: 6, nuls: 1, perdus: 0, pointsJeuGagnes: 56, pointsJeuPerdus: 14, isOurTeam: false },
+    { rang: 2, equipe: "STBG RACING CLUB 3", pointsResultat: 27, joues: 7, gagnes: 4, nuls: 2, perdus: 1, pointsJeuGagnes: 46, pointsJeuPerdus: 24, isOurTeam: false },
+    { rang: 3, equipe: "OSTWALD ST OSWALD 7", pointsResultat: 25, joues: 7, gagnes: 4, nuls: 1, perdus: 2, pointsJeuGagnes: 44, pointsJeuPerdus: 26, isOurTeam: false },
+    { rang: 4, equipe: "ALSATIA UNITAS SCHILTIGHEIM 3", pointsResultat: 24, joues: 7, gagnes: 3, nuls: 2, perdus: 2, pointsJeuGagnes: 46, pointsJeuPerdus: 24, isOurTeam: true },
+    { rang: 5, equipe: "BISCHHEIM CHEMINOTS T.T. 2", pointsResultat: 18, joues: 7, gagnes: 1, nuls: 4, perdus: 2, pointsJeuGagnes: 28, pointsJeuPerdus: 42, isOurTeam: false },
+    { rang: 6, equipe: "STBG CTS 4", pointsResultat: 18, joues: 7, gagnes: 1, nuls: 3, perdus: 3, pointsJeuGagnes: 28, pointsJeuPerdus: 42, isOurTeam: false },
+    { rang: 7, equipe: "STBG ST JEAN 6", pointsResultat: 14, joues: 7, gagnes: 1, nuls: 2, perdus: 4, pointsJeuGagnes: 21, pointsJeuPerdus: 49, isOurTeam: false },
+    { rang: 8, equipe: "OSTWALD ST OSWALD 5", pointsResultat: 10, joues: 7, gagnes: 0, nuls: 1, perdus: 6, pointsJeuGagnes: 11, pointsJeuPerdus: 59, isOurTeam: false }
 ];
 
 
@@ -111,16 +111,23 @@ exports.handler = async function(event, context) {
         await playersBatch.commit();
     }
 
-    // Initialisation du classement
+    // Mise à jour du classement - Supprime l'ancien et ajoute le nouveau
     const rankingCollection = db.collection('ranking-equipe3');
     const rankingSnapshot = await rankingCollection.get();
-    if (rankingSnapshot.empty) {
-        const rankingBatch = db.batch();
-        initialRankingData.forEach(team => {
-            rankingBatch.set(rankingCollection.doc(), team);
-        });
-        await rankingBatch.commit();
-    }
+
+    // Supprimer tous les documents existants
+    const deleteBatch = db.batch();
+    rankingSnapshot.docs.forEach(doc => {
+        deleteBatch.delete(doc.ref);
+    });
+    await deleteBatch.commit();
+
+    // Ajouter les nouvelles données de classement
+    const rankingBatch = db.batch();
+    initialRankingData.forEach(team => {
+        rankingBatch.set(rankingCollection.doc(), team);
+    });
+    await rankingBatch.commit();
 
     return {
       statusCode: 200,
