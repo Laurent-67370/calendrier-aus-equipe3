@@ -53,16 +53,16 @@ const initialMatchesData = [
     { id: 'J14', journee: 14, homeTeam: 'VENDENHEIM ENVOLEE 6', awayTeam: 'ALSATIA UNITAS SCHILTIGHEIM 3', date: '2026-05-15', time: '20h00', venue: 'away', month: 'may', composition: getDefaultComposition(), score: getDefaultScore() }
 ];
 
-// 3. Données du classement basées sur votre image
+// 3. Données du classement actualisées après 9 journées (janvier 2026)
 const initialRankingData = [
-    { rang: 1, equipe: "ALSATIA UNITAS SCHILTIGHEIM 3", pointsResultat: 5, joues: 1, gagnes: 1, nuls: 0, perdus: 0, pointsJeuGagnes: 10, pointsJeuPerdus: 0, isOurTeam: true },
-    { rang: 2, equipe: "OSTWALD ST OSWALD 7", pointsResultat: 5, joues: 1, gagnes: 1, nuls: 0, perdus: 0, pointsJeuGagnes: 10, pointsJeuPerdus: 0, isOurTeam: false },
-    { rang: 3, equipe: "VENDENHEIM ENVOLEE 6", pointsResultat: 5, joues: 1, gagnes: 1, nuls: 0, perdus: 0, pointsJeuGagnes: 8, pointsJeuPerdus: 2, isOurTeam: false },
-    { rang: 4, equipe: "BISCHHEIM CHEMINOTS T.T. 2", pointsResultat: 4, joues: 1, gagnes: 1, nuls: 0, perdus: 0, pointsJeuGagnes: 7, pointsJeuPerdus: 3, isOurTeam: false },
-    { rang: 5, equipe: "STBG RACING CLUB 3", pointsResultat: 2, joues: 1, gagnes: 0, nuls: 0, perdus: 1, pointsJeuGagnes: 3, pointsJeuPerdus: 7, isOurTeam: false },
-    { rang: 6, equipe: "STBG ST JEAN 6", pointsResultat: 1, joues: 1, gagnes: 0, nuls: 0, perdus: 1, pointsJeuGagnes: 2, pointsJeuPerdus: 8, isOurTeam: false },
-    { rang: 7, equipe: "OSTWALD ST OSWALD 5", pointsResultat: 1, joues: 1, gagnes: 0, nuls: 0, perdus: 1, pointsJeuGagnes: 0, pointsJeuPerdus: 10, isOurTeam: false },
-    { rang: 8, equipe: "STBG CTS 4", pointsResultat: 1, joues: 1, gagnes: 0, nuls: 0, perdus: 1, pointsJeuGagnes: 0, pointsJeuPerdus: 10, isOurTeam: false }
+    { rang: 1, equipe: "VENDENHEIM ENVOLEE 6", pointsResultat: 39, joues: 9, gagnes: 7, nuls: 1, perdus: 1, pointsJeuGagnes: 67, pointsJeuPerdus: 23, isOurTeam: false },
+    { rang: 2, equipe: "STBG RACING CLUB 3", pointsResultat: 36, joues: 9, gagnes: 6, nuls: 2, perdus: 1, pointsJeuGagnes: 61, pointsJeuPerdus: 29, isOurTeam: false },
+    { rang: 3, equipe: "ALSATIA UNITAS SCHILTIGHEIM 3", pointsResultat: 34, joues: 9, gagnes: 5, nuls: 2, perdus: 2, pointsJeuGagnes: 62, pointsJeuPerdus: 28, isOurTeam: true },
+    { rang: 4, equipe: "OSTWALD ST OSWALD 7", pointsResultat: 30, joues: 8, gagnes: 5, nuls: 1, perdus: 2, pointsJeuGagnes: 52, pointsJeuPerdus: 28, isOurTeam: false },
+    { rang: 5, equipe: "STBG CTS 4", pointsResultat: 23, joues: 8, gagnes: 2, nuls: 3, perdus: 3, pointsJeuGagnes: 36, pointsJeuPerdus: 44, isOurTeam: false },
+    { rang: 6, equipe: "BISCHHEIM CHEMINOTS T.T. 2", pointsResultat: 20, joues: 9, gagnes: 1, nuls: 4, perdus: 4, pointsJeuGagnes: 32, pointsJeuPerdus: 58, isOurTeam: false },
+    { rang: 7, equipe: "STBG ST JEAN 6", pointsResultat: 16, joues: 9, gagnes: 1, nuls: 2, perdus: 6, pointsJeuGagnes: 25, pointsJeuPerdus: 65, isOurTeam: false },
+    { rang: 8, equipe: "OSTWALD ST OSWALD 5", pointsResultat: 12, joues: 9, gagnes: 0, nuls: 1, perdus: 8, pointsJeuGagnes: 15, pointsJeuPerdus: 75, isOurTeam: false }
 ];
 
 
