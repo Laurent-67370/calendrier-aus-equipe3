@@ -63,7 +63,6 @@ const initialRankingData = [
     { rang: 6, equipe: "BISCHHEIM CHEMINOTS T.T. 2", pointsResultat: 20, joues: 9, gagnes: 1, nuls: 4, perdus: 4, pointsJeuGagnes: 32, pointsJeuPerdus: 58, isOurTeam: false },
     { rang: 7, equipe: "STBG ST JEAN 6", pointsResultat: 16, joues: 9, gagnes: 1, nuls: 2, perdus: 6, pointsJeuGagnes: 25, pointsJeuPerdus: 65, isOurTeam: false },
     { rang: 8, equipe: "OSTWALD ST OSWALD 5", pointsResultat: 12, joues: 9, gagnes: 0, nuls: 1, perdus: 8, pointsJeuGagnes: 15, pointsJeuPerdus: 75, isOurTeam: false }
->>>>>>> f703b66 (Mise à jour du classement après 9 journées (janvier 2026))
 ];
 
 
