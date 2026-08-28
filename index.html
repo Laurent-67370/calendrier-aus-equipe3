@@ -61,16 +61,16 @@
                 </div>
             </div>
             <h1>🏓 ALSATIA UNITAS SCHILTIGHEIM 3</h1>
-            <p class="subtitle">Championnat Messieurs Division 2 - Poule A | Secteur Strasbourg | Saison 2025-2026</p>
+            <p class="subtitle">Championnat Messieurs Division 2 - Poule A | Secteur Strasbourg | Saison 2026-2027</p>
         </header>
         <div class="pwa-status hidden" id="pwaStatus"><span>✅</span> <span>Application installée avec succès ! Fonctionne hors ligne.</span></div>
         <div class="controls"><div class="search-bar"><label for="searchInput" class="search-icon">🔍</label><input type="search" class="search-input" id="searchInput" placeholder="Rechercher un match, une équipe, un joueur..."></div><div class="filters"><button type="button" class="filter-btn active" data-filter="all">Tous les matchs</button><button type="button" class="filter-btn" data-filter="home">Domicile</button><button type="button" class="filter-btn" data-filter="away">Extérieur</button><button type="button" class="filter-btn" data-filter="september">Septembre</button><button type="button" class="filter-btn" data-filter="october">Octobre</button><button type="button" class="filter-btn" data-filter="november">Novembre</button><button type="button" class="filter-btn" data-filter="december">Décembre</button><button type="button" class="filter-btn" data-filter="january">Janvier</button><button type="button" class="filter-btn" data-filter="february">Février</button><button type="button" class="filter-btn" data-filter="march">Mars</button><button type="button" class="filter-btn" data-filter="april">Avril</button><button type="button" class="filter-btn" data-filter="may">Mai</button></div></div>
         
         <div class="info-cards">
-            <div class="info-card"><h3>📅 Saison</h3><p>2025-2026 (1ère & 2ème Phase)</p></div>
+            <div class="info-card"><h3>📅 Saison</h3><p>2026-2027 - 1ère phase</p></div>
             <div class="info-card"><h3>🏆 Division</h3><p>Division 2 - Poule A</p></div>
             <div class="info-card"><h3>📍 Secteur</h3><p>Strasbourg</p></div>
-            <div class="info-card"><h3>🎯 Nombre de matchs</h3><p>14 matchs de championnat</p></div>
+            <div class="info-card"><h3>🎯 Nombre de matchs</h3><p>7 journées (1ère phase) — 2nde phase à venir</p></div>
         </div>
 
         <main class="matches-section">
@@ -80,17 +80,17 @@
             <div class="no-results" id="noResults" style="display: none;"><h3>🔍 Aucun match trouvé</h3><p>Essayez de modifier vos critères de recherche ou de filtrage.</p></div>
             <div class="notes">
                 <h3>📋 Informations importantes</h3>
-                <p><strong>⚠️ À NOTER :</strong></p>
-                <p><strong>• J12 (03/04) :</strong> Match le Vendredi Saint (férié en Alsace). Report ou inversion possible après accord entre les équipes.</p>
-                <p><strong>• Ostwald :</strong> Leurs matchs à domicile (Ostwald 5 et Ostwald 7) se jouent à la SMAPPI, 19 allée René Cassin à Ostwald (près du "Point d'eau").</p>
-                <p><strong>• Résultats :</strong> Envoi de la feuille de match sous 72h maximum (amende sinon).</p>
+                <p><strong>J5 (11-12 novembre) :</strong> mercredi 11 novembre férié — le match entre Wantzenau 4 et Bischheim 1 pourra être reporté ou inversé après accord entre les deux équipes.</p>
+                <p><strong>Ostwald :</strong> Ostwald 4 joue le lundi et Ostwald 6 le jeudi à 20h00 à la SMAPPI, 19 allée René Cassin à Ostwald (près du « Point d'eau »).</p>
+                <p><strong>TT Souffel :</strong> TT-Souffel 3 joue à partir de 20h30 seulement le vendredi soir à domicile ; TT-Souffel 4 le mardi à partir de 20h00 à domicile.</p>
+                <p><strong>Résultats :</strong> Envoi de la feuille de match sous 72h maximum (amende sinon).</p>
                 <p style="margin-top: 1rem;"><strong>📧 Contact pour les résultats :</strong></p>
                 <p><strong>Email :</strong> resultats.secteur.strbg@gmail.com</p>
-                <p><strong>Adresse postale :</strong> Heller Philippe, 11 rue Emile Picard, 67380 Lingolsheim</p>
+                <p><strong>Adresse :</strong> Heller Philippe, 11 rue Emile Picard, 67380 Lingolsheim</p>
             </div>
         </main>
 
-        <footer class="footer"><p>🏓 AGP - Tennis de Table - Section du Bas-Rhin | Document imprimé le 21-08-2025</p><p style="margin-top: 0.5rem; font-size: 0.8rem; opacity: 0.8;">📱 Application Progressive Web App - Développée pour l'AUS</p></footer>
+        <footer class="footer"><p>🏓 AGP - Tennis de Table - Section du Bas-Rhin</p><p style="margin-top: 0.5rem; font-size: 0.8rem; opacity: 0.8;">📱 Application Progressive Web App - Développée pour l'AUS</p></footer>
     </div>
     
     <!-- MODALES -->
@@ -186,7 +186,7 @@
         
         let currentFilter = 'all', currentSearch = '', currentEditingMatchId = null, tempComposition = null, deferredPrompt;
 
-        async function loadMatchesData() { try { const response = await fetch('/.netlify/functions/getMatches-equipe3'); if (!response.ok) throw new Error('API error'); const data = await response.json(); data.sort((a, b) => a.journee - b.journee); return data.map(match => ({ ...match, composition: match.composition || getDefaultComposition(), score: match.score || getDefaultScore() })); } catch (error) { console.error("Load error:", error); resultsInfo.textContent = "Erreur de chargement."; return []; } }
+        async function loadMatchesData() { try { const response = await fetch('/.netlify/functions/getMatches-equipe3'); if (!response.ok) throw new Error('API error'); const data = (await response.json()).filter(m => (m.season || '2026-2027') === '2026-2027'); data.sort((a, b) => a.journee - b.journee); return data.map(match => ({ ...match, composition: match.composition || getDefaultComposition(), score: match.score || getDefaultScore() })); } catch (error) { console.error("Load error:", error); resultsInfo.textContent = "Erreur de chargement."; return []; } }
         async function saveComposition(matchId, composition) { try { const response = await fetch('/.netlify/functions/updateMatch-equipe3', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ matchId, composition }) }); if (!response.ok) throw new Error('API error'); } catch (error) { console.error("Save error:", error); alert("Erreur de sauvegarde."); } }
         async function saveScore(matchId, score) { try { const response = await fetch('/.netlify/functions/updateScore-equipe3', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ matchId, score }) }); if (!response.ok) throw new Error('API error'); } catch (error) { console.error("Save score error:", error); alert("Erreur de sauvegarde du score."); } }
         async function loadPlayersData() { try { const response = await fetch('/.netlify/functions/getPlayers-equipe3'); if (!response.ok) throw new Error('API error'); return await response.json(); } catch (error) { console.error("Player load error:", error); alert("Erreur: Impossible de charger la liste des joueurs."); return []; } }

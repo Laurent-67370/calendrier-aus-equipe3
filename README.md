@@ -148,7 +148,7 @@ L'application propose deux thèmes :
 
 Le choix est sauvegardé dans le navigateur.
 
-## 📅 Calendrier 2025-2026
+## 📅 Calendrier 2026-2027
 
 ### 1ère Phase 2025
 - Journées 1 à 7 : Septembre 2025 - Décembre 2025

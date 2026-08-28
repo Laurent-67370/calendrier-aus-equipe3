@@ -16,54 +16,21 @@ const playersData = [
 const getDefaultComposition = () => ({ available: [], unavailable: [], noresponse: playersData.map(p => p.id), selected: [] });
 const getDefaultScore = () => ({ alsatia: 0, opponent: 0 });
 
-// 2. Liste des matchs de l'équipe 3
+// 2. Liste des matchs de l'équipe 3 — Saison 2026-2027, Division 2 poule A (1ère phase)
+// Source : PDF secteur Strasbourg "Saison 2026-2027 - Calendrier de 1ère Phase" (25-08-2026)
 const initialMatchesData = [
-    // --- MODIFICATION APPLIQUÉE ICI ---
-    { 
-        id: 'J1', 
-        journee: 1, 
-        homeTeam: 'OSTWALD ST OSWALD 5', 
-        awayTeam: 'ALSATIA UNITAS SCHILTIGHEIM 3', 
-        date: '2025-09-18', 
-        time: '20h00', 
-        venue: 'away', 
-        month: 'september',
-        composition: { // Composition par défaut pour la J1
-            available: [1, 2, 4], // Philippe, JP, Julien
-            unavailable: [],
-            noresponse: [3, 5, 6],
-            selected: [4, 2, 1] // Julien, JP, Philippe comme sur l'image
-        }, 
-        score: getDefaultScore() // Score initialisé à 0-0
-    },
-    // Les autres journées sont initialisées normalement
-    { id: 'J2', journee: 2, homeTeam: 'ALSATIA UNITAS SCHILTIGHEIM 3', awayTeam: 'STBG ST JEAN 6', date: '2025-10-02', time: '20h15', venue: 'home', month: 'october', composition: getDefaultComposition(), score: getDefaultScore() },
-    { id: 'J3', journee: 3, homeTeam: 'ALSATIA UNITAS SCHILTIGHEIM 3', awayTeam: 'STBG CTS 4', date: '2025-10-16', time: '20h15', venue: 'home', month: 'october', composition: getDefaultComposition(), score: getDefaultScore() },
-    { id: 'J4', journee: 4, homeTeam: 'STBG RACING CLUB 3', awayTeam: 'ALSATIA UNITAS SCHILTIGHEIM 3', date: '2025-10-31', time: '20h15', venue: 'away', month: 'october', composition: getDefaultComposition(), score: getDefaultScore() },
-    { id: 'J5', journee: 5, homeTeam: 'ALSATIA UNITAS SCHILTIGHEIM 3', awayTeam: 'BISCHHEIM CHEMINOTS T.T. 2', date: '2025-11-20', time: '20h15', venue: 'home', month: 'november', composition: getDefaultComposition(), score: getDefaultScore() },
-    { id: 'J6', journee: 6, homeTeam: 'OSTWALD ST OSWALD 7', awayTeam: 'ALSATIA UNITAS SCHILTIGHEIM 3', date: '2025-12-05', time: '20h00', venue: 'away', month: 'december', composition: getDefaultComposition(), score: getDefaultScore() },
-    { id: 'J7', journee: 7, homeTeam: 'ALSATIA UNITAS SCHILTIGHEIM 3', awayTeam: 'VENDENHEIM ENVOLEE 6', date: '2025-12-18', time: '20h15', venue: 'home', month: 'december', composition: getDefaultComposition(), score: getDefaultScore() },
-    // --- 2ème Phase 2026 ---
-    { id: 'J8', journee: 8, homeTeam: 'ALSATIA UNITAS SCHILTIGHEIM 3', awayTeam: 'OSTWALD ST OSWALD 5', date: '2026-01-22', time: '20h15', venue: 'home', month: 'january', composition: getDefaultComposition(), score: getDefaultScore() },
-    { id: 'J9', journee: 9, homeTeam: 'STBG ST JEAN 6', awayTeam: 'ALSATIA UNITAS SCHILTIGHEIM 3', date: '2026-01-30', time: '20h15', venue: 'away', month: 'january', composition: getDefaultComposition(), score: getDefaultScore() },
-    { id: 'J10', journee: 10, homeTeam: 'STBG CTS 4', awayTeam: 'ALSATIA UNITAS SCHILTIGHEIM 3', date: '2026-02-11', time: '20h15', venue: 'away', month: 'february', composition: getDefaultComposition(), score: getDefaultScore() },
-    { id: 'J11', journee: 11, homeTeam: 'ALSATIA UNITAS SCHILTIGHEIM 3', awayTeam: 'STBG RACING CLUB 3', date: '2026-03-12', time: '20h15', venue: 'home', month: 'march', composition: getDefaultComposition(), score: getDefaultScore() },
-    { id: 'J12', journee: 12, homeTeam: 'BISCHHEIM CHEMINOTS T.T. 2', awayTeam: 'ALSATIA UNITAS SCHILTIGHEIM 3', date: '2026-04-03', time: '20h15', venue: 'away', month: 'april', composition: getDefaultComposition(), score: getDefaultScore() },
-    { id: 'J13', journee: 13, homeTeam: 'ALSATIA UNITAS SCHILTIGHEIM 3', awayTeam: 'OSTWALD ST OSWALD 7', date: '2026-04-23', time: '20h15', venue: 'home', month: 'april', composition: getDefaultComposition(), score: getDefaultScore() },
-    { id: 'J14', journee: 14, homeTeam: 'VENDENHEIM ENVOLEE 6', awayTeam: 'ALSATIA UNITAS SCHILTIGHEIM 3', date: '2026-05-15', time: '20h00', venue: 'away', month: 'may', composition: getDefaultComposition(), score: getDefaultScore() }
+    { id: 'N1', journee: 1, homeTeam: 'LA WANTZENAU ST PAUL 4', awayTeam: 'ALSATIA UNITAS SCHILTIGHEIM 3', date: '2026-09-09', time: '20h', venue: 'away', month: 'september', season: '2026-2027', composition: getDefaultComposition(), score: getDefaultScore() },
+    { id: 'N2', journee: 2, homeTeam: 'ALSATIA UNITAS SCHILTIGHEIM 3', awayTeam: 'STBG ST JEAN 5', date: '2026-09-24', time: '20h15', venue: 'home', month: 'september', season: '2026-2027', composition: getDefaultComposition(), score: getDefaultScore() },
+    { id: 'N3', journee: 3, homeTeam: 'TT-SOUFFEL 3', awayTeam: 'ALSATIA UNITAS SCHILTIGHEIM 3', date: '2026-10-09', time: '20h30', venue: 'away', month: 'october', season: '2026-2027', composition: getDefaultComposition(), score: getDefaultScore() },
+    { id: 'N4', journee: 4, homeTeam: 'TT-SOUFFEL 4', awayTeam: 'ALSATIA UNITAS SCHILTIGHEIM 3', date: '2026-10-27', time: '20h', venue: 'away', month: 'october', season: '2026-2027', composition: getDefaultComposition(), score: getDefaultScore() },
+    { id: 'N5', journee: 5, homeTeam: 'ALSATIA UNITAS SCHILTIGHEIM 3', awayTeam: 'OSTWALD ST OSWALD 6', date: '2026-11-12', time: '20h15', venue: 'home', month: 'november', season: '2026-2027', composition: getDefaultComposition(), score: getDefaultScore() },
+    { id: 'N6', journee: 6, homeTeam: 'OSTWALD ST OSWALD 4', awayTeam: 'ALSATIA UNITAS SCHILTIGHEIM 3', date: '2026-11-23', time: '20h', venue: 'away', month: 'november', season: '2026-2027', composition: getDefaultComposition(), score: getDefaultScore() },
+    { id: 'N7', journee: 7, homeTeam: 'ALSATIA UNITAS SCHILTIGHEIM 3', awayTeam: 'BISCHHEIM CHEMINOTS T.T. 1', date: '2026-12-17', time: '20h15', venue: 'home', month: 'december', season: '2026-2027', composition: getDefaultComposition(), score: getDefaultScore() }
 ];
 
-// 3. Données du classement actualisées après 9 journées (janvier 2026)
-const initialRankingData = [
-    { rang: 1, equipe: "VENDENHEIM ENVOLEE 6", pointsResultat: 39, joues: 9, gagnes: 7, nuls: 1, perdus: 1, pointsJeuGagnes: 67, pointsJeuPerdus: 23, isOurTeam: false },
-    { rang: 2, equipe: "STBG RACING CLUB 3", pointsResultat: 36, joues: 9, gagnes: 6, nuls: 2, perdus: 1, pointsJeuGagnes: 61, pointsJeuPerdus: 29, isOurTeam: false },
-    { rang: 3, equipe: "ALSATIA UNITAS SCHILTIGHEIM 3", pointsResultat: 34, joues: 9, gagnes: 5, nuls: 2, perdus: 2, pointsJeuGagnes: 62, pointsJeuPerdus: 28, isOurTeam: true },
-    { rang: 4, equipe: "OSTWALD ST OSWALD 7", pointsResultat: 30, joues: 8, gagnes: 5, nuls: 1, perdus: 2, pointsJeuGagnes: 52, pointsJeuPerdus: 28, isOurTeam: false },
-    { rang: 5, equipe: "STBG CTS 4", pointsResultat: 23, joues: 8, gagnes: 2, nuls: 3, perdus: 3, pointsJeuGagnes: 36, pointsJeuPerdus: 44, isOurTeam: false },
-    { rang: 6, equipe: "BISCHHEIM CHEMINOTS T.T. 2", pointsResultat: 20, joues: 9, gagnes: 1, nuls: 4, perdus: 4, pointsJeuGagnes: 32, pointsJeuPerdus: 58, isOurTeam: false },
-    { rang: 7, equipe: "STBG ST JEAN 6", pointsResultat: 16, joues: 9, gagnes: 1, nuls: 2, perdus: 6, pointsJeuGagnes: 25, pointsJeuPerdus: 65, isOurTeam: false },
-    { rang: 8, equipe: "OSTWALD ST OSWALD 5", pointsResultat: 12, joues: 9, gagnes: 0, nuls: 1, perdus: 8, pointsJeuGagnes: 15, pointsJeuPerdus: 75, isOurTeam: false }
-];
+// 3. Classement : vide au départ de la saison 2026-2027 — sera rempli au fil des
+// journées (le seed précédent datait de la saison 2025-2026 et n'a plus de valeur).
+const initialRankingData = [];
 
 
 // --- Logique d'initialisation (ne pas modifier) ---
@@ -84,6 +51,18 @@ exports.handler = async function(event, context) {
     const matchesCollection = db.collection('matches-equipe3');
     const matchesBatch = db.batch();
     let addedMatches = 0;
+
+    // Migration saison : les anciens matchs (J1-J14, 2025-2026) n'ont pas de champ
+    // 'season' — on le rajoute pour que l'app puisse filtrer la saison en cours.
+    try {
+      const allSnapshot = await matchesCollection.get();
+      const tagBatch = db.batch();
+      let tagged = 0;
+      allSnapshot.forEach(doc => {
+        if (!doc.data().season) { tagBatch.update(doc.ref, { season: '2025-2026' }); tagged++; }
+      });
+      if (tagged > 0) { await tagBatch.commit(); console.log(`Migration saison : ${tagged} ancien(s) match(s) tagué(s) 2025-2026.`); }
+    } catch (e) { console.error('Tag anciens matchs:', e); }
 
     for (const match of initialMatchesData) {
         const { id, ...matchData } = match;
