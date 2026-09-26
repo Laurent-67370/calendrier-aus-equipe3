@@ -45,9 +45,19 @@ const matchCorrections = {
   N4: { date: '2026-10-30', time: '20h30' }, // PDF : VE 30 OCT 20 H 30 (surligné) — le seed initial avait 27/10 20h
 };
 
-// 4. Classement : vide au départ de la saison 2026-2027 — sera rempli au fil des
-// journées (le seed précédent datait de la saison 2025-2026 et n'a plus de valeur).
-const initialRankingData = [];
+// 4. Classement : Division 2 poule A, secteur Strasbourg — saison 2026-2027
+// Source : PDF AGR "Classement des équipes - MESSIEURS - Secteur Strasbourg -
+// 1ère Phase" après la journée 2 (impression du 26-09-2026).
+const initialRankingData = [
+  { rang: 1, equipe: 'ALSATIA UNITAS SCHILTIGHEIM 3', pointsResultat: 10, joues: 2, gagnes: 2, nuls: 0, perdus: 0, pointsJeuGagnes: 18, pointsJeuPerdus: 2, isOurTeam: true },
+  { rang: 2, equipe: 'BISCHHEIM CHEMINOTS T.T. 1',     pointsResultat: 9,  joues: 2, gagnes: 2, nuls: 0, perdus: 0, pointsJeuGagnes: 17, pointsJeuPerdus: 3,  isOurTeam: false },
+  { rang: 3, equipe: 'OSTWALD ST OSWALD 4',             pointsResultat: 9,  joues: 2, gagnes: 2, nuls: 0, perdus: 0, pointsJeuGagnes: 16, pointsJeuPerdus: 4,  isOurTeam: false },
+  { rang: 4, equipe: 'TT-SOUFFEL 3',                    pointsResultat: 5,  joues: 2, gagnes: 0, nuls: 1, perdus: 1, pointsJeuGagnes: 9,  pointsJeuPerdus: 11, isOurTeam: false },
+  { rang: 5, equipe: 'LA WANTZENAU ST PAUL 4',           pointsResultat: 5,  joues: 2, gagnes: 1, nuls: 0, perdus: 1, pointsJeuGagnes: 7,  pointsJeuPerdus: 13, isOurTeam: false },
+  { rang: 6, equipe: 'STBG ST JEAN 5',                   pointsResultat: 4,  joues: 2, gagnes: 0, nuls: 1, perdus: 1, pointsJeuGagnes: 7,  pointsJeuPerdus: 13, isOurTeam: false },
+  { rang: 7, equipe: 'TT-SOUFFEL 4',                     pointsResultat: 3,  joues: 2, gagnes: 0, nuls: 0, perdus: 2, pointsJeuGagnes: 3,  pointsJeuPerdus: 17, isOurTeam: false },
+  { rang: 8, equipe: 'OSTWALD ST OSWALD 6',              pointsResultat: 3,  joues: 2, gagnes: 0, nuls: 0, perdus: 2, pointsJeuGagnes: 3,  pointsJeuPerdus: 17, isOurTeam: false },
+];
 
 
 // --- Logique d'initialisation (ne pas modifier) ---
