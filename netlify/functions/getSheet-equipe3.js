@@ -11,7 +11,8 @@ if (!admin.apps.length) {
 }
 const db = admin.firestore();
 
-// GET ?matchId=XXX -> { image, updatedAt } ou 404 si aucune feuille enregistrée
+// GET ?matchId=XXX&v=VERSION -> image JPEG (binaire).
+// La version change à chaque nouvel envoi : l'URL est donc immuable et le navigateur peut la garder en cache.
 exports.handler = async function(event, context) {
   try {
     const matchId = event.queryStringParameters && event.queryStringParameters.matchId;
@@ -22,10 +23,12 @@ exports.handler = async function(event, context) {
     if (!snap.exists) {
       return { statusCode: 404, body: 'Aucune feuille pour ce match' };
     }
+    const base64 = String(snap.data().image || '').replace(/^data:image\/jpeg;base64,/, '');
     return {
       statusCode: 200,
-      headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' },
-      body: JSON.stringify(snap.data()),
+      headers: { 'Content-Type': 'image/jpeg', 'Cache-Control': 'public, max-age=31536000, immutable' },
+      body: base64,
+      isBase64Encoded: true,
     };
   } catch (error) {
     return { statusCode: 500, body: error.toString() };

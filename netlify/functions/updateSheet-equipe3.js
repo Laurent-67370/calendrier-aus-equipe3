@@ -37,7 +37,7 @@ exports.handler = async function(event, context) {
 
     if (action === 'delete') {
       await sheetRef.delete();
-      await matchRef.update({ hasSheet: false });
+      await matchRef.update({ hasSheet: false, sheetVersion: admin.firestore.FieldValue.delete() });
       return { statusCode: 200, body: JSON.stringify({ message: 'Feuille supprimée' }) };
     }
 
@@ -48,10 +48,11 @@ exports.handler = async function(event, context) {
       return { statusCode: 413, body: 'Image trop volumineuse' };
     }
 
-    await sheetRef.set({ image, updatedAt: new Date().toISOString() });
-    await matchRef.update({ hasSheet: true });
+    const version = Date.now();
+    await sheetRef.set({ image, updatedAt: new Date(version).toISOString() });
+    await matchRef.update({ hasSheet: true, sheetVersion: version });
 
-    return { statusCode: 200, body: JSON.stringify({ message: 'Feuille enregistrée' }) };
+    return { statusCode: 200, body: JSON.stringify({ message: 'Feuille enregistrée', version }) };
   } catch (error) {
     console.error('Error updating sheet: ', error);
     return { statusCode: 500, body: error.toString() };
