@@ -5,9 +5,10 @@ Application web PWA (Progressive Web App) pour gérer le calendrier, les composi
 ## 📋 Description
 
 Cette application permet de :
-- 📅 Consulter le calendrier complet des matchs (saisons 2025 et 2026)
+- 📅 Consulter le calendrier complet des matchs (saison 2026-2027)
 - 👥 Gérer la composition de l'équipe pour chaque match
 - 🏆 Enregistrer et consulter les scores
+- 📄 Joindre la photo de la feuille de match de chaque rencontre
 - 📊 Suivre le classement de la division
 - 🔍 Rechercher et filtrer les matchs
 - 📱 Installer l'application sur mobile (PWA)
@@ -34,6 +35,8 @@ calendrier-aus-equipe3/
 │       ├── getRanking-equipe3.js       # Récupération du classement
 │       ├── updateMatch-equipe3.js      # Mise à jour d'un match
 │       ├── updateScore-equipe3.js      # Mise à jour d'un score
+│       ├── updateSheet-equipe3.js      # Envoi / suppression de la feuille de match (photo)
+│       ├── getSheet-equipe3.js         # Lecture de la photo de la feuille de match
 │       └── updatePlayers-equipe3.js    # Mise à jour des joueurs
 ├── netlify.toml                        # Configuration Netlify
 ├── package.json                        # Dépendances du projet
@@ -53,11 +56,19 @@ Stocke les matchs de l'équipe :
 - `month` : Mois du match
 - `composition` : Disponibilités des joueurs
 - `score` : Score du match
+- `hasSheet` : `true` si une feuille de match (photo) est enregistrée
+- `sheetVersion` : Version de la photo (change à chaque nouvel envoi, sert d'invalidation du cache)
 
 ### `players-equipe3`
 Liste des joueurs :
 - `id` : Identifiant unique
 - `name` : Nom du joueur
+
+### `sheets-equipe3`
+
+Photos des feuilles de match (un document par match, même identifiant que dans `matches-equipe3`) :
+- `image` : Photo au format JPEG (data URL, < 850 Ko)
+- `updatedAt` : Date d'enregistrement (ISO)
 
 ### `ranking-equipe3`
 Classement de la division :
@@ -132,6 +143,16 @@ Pour chaque match, vous pouvez :
   - 🔴 Rouge : Défaite
   - ⚫ Gris : Match nul
 
+### Feuilles de match
+
+Pour chaque match, le bouton **📄 Feuille de match** permet de :
+
+- Prendre une photo de la feuille ou en choisir une dans la galerie
+- La consulter ensuite via **📄 Voir la feuille**
+- La remplacer ou la supprimer
+
+La photo est réduite dans le navigateur (JPEG < 850 Ko, limite d'un document Firestore) avant l'envoi. Elle est servie comme une vraie image mise en cache par le navigateur : seule la première ouverture télécharge la photo.
+
 ## 📱 Fonctionnalités PWA
 
 L'application peut être installée sur mobile et bureau :
@@ -150,11 +171,11 @@ Le choix est sauvegardé dans le navigateur.
 
 ## 📅 Calendrier 2026-2027
 
-### 1ère Phase 2025
-- Journées 1 à 7 : Septembre 2025 - Décembre 2025
+### 1ère Phase (aller)
+- Journées 1 à 7 : Septembre 2026 - Décembre 2026
 
-### 2ème Phase 2026
-- Journées 8 à 14 : Janvier 2026 - Mai 2026
+### 2ème Phase (retour)
+- Journées 8 à 14 : Janvier 2027 - Avril 2027
 
 ## 👥 Joueurs de l'équipe
 
